@@ -1,0 +1,34 @@
+Voice-CN-Linux/
+├── LICENSE
+├── README-CN.md
+├── README.md
+├── generate_structure.py
+├── media
+│   ├── icon.png
+│   └── microphone.svg
+├── package.json
+├── src
+│   ├── api
+│   │   ├── ApiManager.js
+│   │   ├── aliyun
+│   │   │   └── AliyunProvider.js
+│   │   ├── baidu
+│   │   │   └── BaiduApi.js
+│   │   ├── prompt-optimizer
+│   │   │   └── PromptOptimizer.js
+│   │   ├── tencent
+│   │   │   └── TencentProvider.js
+│   │   └── xunfei
+│   │       ├── XunfeiDialectApi.js
+│   │       └── XunfeiMandarinApi.js
+│   ├── extension.js
+│   └── ui
+│       ├── ConfigView.js
+│       ├── RecordView.js
+│       └── recorder
+│           ├── ChatInputHandler.js
+│           ├── PositionSelector.js
+│           ├── RecordManager.js
+│           ├── RecordViewTemplate.js
+│           └── TextInsertionManager.js
+└── webpack.config.js
