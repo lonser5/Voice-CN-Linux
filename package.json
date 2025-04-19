@@ -1,0 +1,377 @@
+{
+  "name": "Voice-CN-Linux",
+  "displayName": "Voice-CN-Linux",
+  "description": "语音转文字VSCode扩展",
+  "version": "0.4.3",
+  "publisher": "lonser",
+  "license": "MIT",
+  "icon": "media/icon.png",
+  "engines": {
+    "vscode": "^1.60.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:voice-to-text.start",
+    "onCommand:voice-to-text.toggleRecording",
+    "onView:voice-to-text-recorder",
+    "onView:voice-to-text-config",
+    "onStartupFinished"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "voice-to-text.start",
+        "title": "启动语音转文字"
+      },
+      {
+        "command": "voice-to-text.debug",
+        "title": "诊断语音转文字扩展"
+      },
+      {
+        "command": "voice-to-text.openRecorder",
+        "title": "打开语音录制器",
+        "category": "语音转文字"
+      },
+      {
+        "command": "voice-to-text.toggleRecording",
+        "title": "开始/停止录音",
+        "category": "语音转文字"
+      },
+      {
+        "command": "voice-to-text.sendToChat",
+        "title": "将最后识别结果发送到聊天",
+        "category": "语音转文字"
+      },
+      {
+        "command": "voice-to-text.activityBarIconClicked",
+        "title": "麦克风图标点击",
+        "category": "语音转文字"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "voice-to-text-view",
+          "title": "语音转文字",
+          "icon": "media/microphone.svg"
+        }
+      ]
+    },
+    "views": {
+      "voice-to-text-view": [
+        {
+          "id": "voice-to-text-config",
+          "name": "API配置",
+          "type": "webview"
+        },
+        {
+          "id": "voice-to-text-recorder",
+          "name": "语音录制器",
+          "type": "webview",
+          "when": "true"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "voice-to-text-recorder",
+        "contents": "点击此处开始录音\n[开始录音](command:voice-to-text.activityBarIconClicked)"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "voice-to-text.toggleRecording",
+        "key": "ctrl+1",
+        "when": "true"
+      },
+      {
+        "command": "voice-to-text.sendToChat",
+        "key": "ctrl+2",
+        "when": "true"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "voice-to-text.activityBarIconClicked",
+          "group": "navigation",
+          "when": "view == voice-to-text-recorder"
+        }
+      ],
+      "viewsContainer/title": [
+        {
+          "command": "voice-to-text.activityBarIconClicked",
+          "group": "navigation",
+          "when": "viewContainer == voice-to-text-view"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "语音转文字",
+      "properties": {
+        "voice-to-text.apiProvider": {
+          "type": "string",
+          "default": "baidu",
+          "enum": [
+            "baidu",
+            "xunfei-mandarin",
+            "xunfei-dialect",
+            "aliyun",
+            "tencent"
+          ],
+          "enumDescriptions": [
+            "百度短语音识别极速版",
+            "讯飞星火语音识别大模型中文版",
+            "讯飞星火语音识别大模型方言版",
+            "阿里云实时语音识别",
+            "腾讯云一句话识别"
+          ],
+          "description": "选择使用的语音识别服务提供商。"
+        },
+        "voice-to-text.autoCopy": {
+          "type": "boolean",
+          "default": false,
+          "description": "识别后自动复制结果到剪贴板"
+        },
+        "voice-to-text.promptOptimization.enabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "启用AI提示词优化功能"
+        },
+        "voice-to-text.promptOptimization.deepseekApiKey": {
+          "type": "string",
+          "default": "",
+          "description": "DeepSeek V3 API密钥"
+        },
+        "voice-to-text.baidu": {
+          "type": "object",
+          "description": "百度语音识别 API 配置",
+          "properties": {
+            "appId": {
+              "type": "string",
+              "default": "",
+              "description": "百度语音 App ID"
+            },
+            "apiKey": {
+              "type": "string",
+              "default": "",
+              "description": "百度语音 API Key"
+            },
+            "secretKey": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "default": "",
+              "description": "百度语音 Secret Key",
+              "markdownDescription": "百度语音 Secret Key。出于安全考虑，建议在用户设置 (`settings.json`) 中配置此项。"
+            }
+          },
+          "default": {
+            "appId": "",
+            "apiKey": "",
+            "secretKey": ""
+          }
+        },
+        "voice-to-text.xunfei": {
+          "type": "object",
+          "description": "讯飞语音识别 API 配置 (中文与方言版通用)",
+          "properties": {
+            "appId": {
+              "type": "string",
+              "default": "",
+              "description": "讯飞语音 App ID"
+            },
+            "apiKey": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "default": "",
+              "description": "讯飞语音 API Key",
+              "markdownDescription": "讯飞语音 API Key。出于安全考虑，建议在用户设置 (`settings.json`) 中配置此项。"
+            },
+            "apiSecret": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "default": "",
+              "description": "讯飞语音 API Secret",
+              "markdownDescription": "讯飞语音 API Secret。出于安全考虑，建议在用户设置 (`settings.json`) 中配置此项。"
+            }
+          },
+          "default": {
+            "appId": "",
+            "apiKey": "",
+            "apiSecret": ""
+          }
+        },
+        "voice-to-text.xunfei-mandarin": {
+          "type": "object",
+          "description": "讯飞星火语音识别 API 配置 (普通话)",
+          "properties": {
+            "appId": {
+              "type": "string",
+              "default": "",
+              "description": "讯飞语音 App ID (普通话)"
+            },
+            "apiKey": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "default": "",
+              "description": "讯飞语音 API Key (普通话)"
+            },
+            "apiSecret": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "default": "",
+              "description": "讯飞语音 API Secret (普通话)"
+            }
+          },
+          "default": {
+            "appId": "",
+            "apiKey": "",
+            "apiSecret": ""
+          }
+        },
+        "voice-to-text.xunfei-dialect": {
+          "type": "object",
+          "description": "讯飞星火语音识别 API 配置 (方言)",
+          "properties": {
+            "appId": {
+              "type": "string",
+              "default": "",
+              "description": "讯飞语音 App ID (方言)"
+            },
+            "apiKey": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "default": "",
+              "description": "讯飞语音 API Key (方言)"
+            },
+            "apiSecret": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "default": "",
+              "description": "讯飞语音 API Secret (方言)"
+            }
+          },
+          "default": {
+            "appId": "",
+            "apiKey": "",
+            "apiSecret": ""
+          }
+        },
+        "voice-to-text.aliyun": {
+          "type": "object",
+          "description": "阿里云实时语音识别 API 配置",
+          "properties": {
+            "appKey": {
+              "type": "string",
+              "default": "",
+              "description": "阿里云智能语音交互项目 AppKey"
+            },
+            "accessKeyId": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "default": "",
+              "description": "阿里云 AccessKey ID",
+              "markdownDescription": "阿里云 AccessKey ID。用于获取临时 Token。出于安全考虑，建议在用户设置 (`settings.json`) 中配置此项。"
+            },
+            "accessKeySecret": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "default": "",
+              "description": "阿里云 AccessKey Secret",
+              "markdownDescription": "阿里云 AccessKey Secret。用于获取临时 Token。出于安全考虑，强烈建议在用户设置 (`settings.json`) 中配置此项。"
+            }
+          },
+          "default": {
+            "appKey": "",
+            "accessKeyId": "",
+            "accessKeySecret": ""
+          }
+        },
+        "voice-to-text.tencent": {
+          "type": "object",
+          "description": "腾讯云一句话识别 API 配置",
+          "properties": {
+            "appId": {
+              "type": "string",
+              "default": "",
+              "description": "腾讯云 AppId"
+            },
+            "secretId": {
+              "type": "string",
+              "default": "",
+              "description": "腾讯云 SecretId"
+            },
+            "secretKey": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "default": "",
+              "description": "腾讯云 SecretKey",
+              "markdownDescription": "腾讯云 SecretKey。出于安全考虑，建议在用户设置 (`settings.json`) 中配置此项。"
+            }
+          },
+          "default": {
+            "appId": "",
+            "secretId": "",
+            "secretKey": ""
+          }
+        }
+      }
+    }
+  },
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": true
+    },
+    "virtualWorkspaces": true
+  },
+  "permissions": [
+    "audio"
+  ],
+  "scripts": {
+    "vscode:prepublish": "npm run package",
+    "package": "webpack --mode production --devtool hidden-source-map",
+    "compile": "webpack --mode development",
+    "watch": "webpack --mode development --watch",
+    "lint": "eslint src --ext js"
+  },
+  "devDependencies": {
+    "@electron/rebuild": "^3.7.1",
+    "@types/vscode": "^1.60.0",
+    "eslint": "^8.36.0",
+    "webpack": "^5.76.0",
+    "webpack-cli": "^5.0.1"
+  },
+  "dependencies": {
+    "@alicloud/pop-core": "^1.8.0",
+    "alibabacloud-nls": "^1.0.4",
+    "axios": "^1.3.4",
+    "baidu-aip-sdk": "^4.16.10",
+    "electron": "^35.1.4",
+    "mic": "^2.1.2",
+    "naudiodon": "^2.3.6",
+    "ws": "^8.18.1"
+  }
+}
